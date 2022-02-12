@@ -1,11 +1,12 @@
 const mongoose = require('mongoose');
+require('dotenv/config');
 
 // Import of the model Recipe from './models/Recipe.model.js'
 const Recipe = require('./models/Recipe.model');
 // Import of the data from './data.json'
 const data = require('./data');
 
-const MONGODB_URI = 'mongodb+srv://aleixabuli:ergoprelmayer@cluster0.qznib.mongodb.net/ReceipeApp?retryWrites=true&w=majority';
+const MONGODB_URI = process.env.MONGODB_URI;
 
 // Connection to the database "recipe-app"
 
@@ -20,14 +21,14 @@ mongoose
     Recipe.insertMany(data)
     .then((response)=>{
 
-      console.log(response.map(el=>el.title))
+      console.log(response.map(el=>el.title));
       Recipe.findOneAndUpdate({title: 'Rigatoni alla Genovese'}, {duration: 100})
       .then(() => {
 
         console.log('Rigatoni changed successfully!')
         Recipe.deleteOne({title: 'Carrot Cake'})
         .then(()=>{
-          console.log('Carrot cake deleted :(')
+          console.log('Carrot cake deleted :(');
           mongoose.connection.close();
         })
         .catch(error => console.log(error))
